@@ -18,25 +18,49 @@
 
 		<script>
 
-			function addX(str){
-				$(str).text('X');
+			var turn;
+
+			//Based on btn clicked, set initial value of turn var
+			function pickFirstTurn(str){
+				if (str == 'X'){
+					turn = 'X';
+				} else if (str == 'O'){
+					turn = 'O';
+				}
+				console.log(turn);
 			}
 
-			function addO(str){
-				$(str).text('O');
+
+			//After a move, switch turn from X to O or vice versa
+			function switchTurn(){
+				if (turn == 'X'){
+					turn = 'O';
+				} else turn = 'X';
 			}
 
+			//set a box to be an X or O depending on turn
+			//then switches the turn to the other player
+			function move(box, turn){
+				$(box).text(turn);
+				switchTurn();
+			}
 
 			$(document).ready(function() {
-				$('#box1').on('click', function() {addX('#box1');});
-				$('#box2').on('click', function() {addX('#box2');});
-				$('#box3').on('click', function() {addX('#box3');});
-				$('#box4').on('click', function() {addX('#box4');});
-				$('#box5').on('click', function() {addX('#box5');});
-				$('#box6').on('click', function() {addX('#box6');});
-				$('#box7').on('click', function() {addX('#box7');});
-				$('#box8').on('click', function() {addX('#box8');});
-				$('#box9').on('click', function() {addX('#box9');});
+				$('#box1').on('click', function() {move('#box1', turn);});
+				$('#box2').on('click', function() {move('#box2', turn);});
+				$('#box3').on('click', function() {move('#box3', turn);});
+				$('#box4').on('click', function() {move('#box4', turn);});
+				$('#box5').on('click', function() {move('#box5', turn);});
+				$('#box6').on('click', function() {move('#box6', turn);});
+				$('#box7').on('click', function() {move('#box7', turn);});
+				$('#box8').on('click', function() {move('#box8', turn);});
+				$('#box9').on('click', function() {move('#box9', turn);});
+
+				// First Turn Buttons
+				// Will be added to initial pop-up box
+				$('#btnXStarts').on('click', function() {pickFirstTurn('X');});
+				$('#btnOStarts').on('click', function() {pickFirstTurn('O');});
+
 
 			});
 
@@ -59,6 +83,9 @@
 					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>
 				
 			</div>
+
+			<button id="btnXStarts">X STARTS</button>
+			<button id="btnOStarts">O STARTS</button>
 		</div>
 		
 	</body>
