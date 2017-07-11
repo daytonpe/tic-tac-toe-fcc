@@ -1,0 +1,101 @@
+*{
+	font-family: 'Roboto Condensed', sans-serif;
+	color: black;
+}
+
+h1{
+	font-size: 3em;
+}
+
+h2{
+	font-size: 2em;
+}
+
+
+html, body { 
+	/*background-size: 120% cover;*/
+  /*background: url(http://renatures.com/wp-content/uploads/2016/09/fields-countryside-sky-landscape-grass-italian-hills-italy-full-hd-wallpaper.jpg) no-repeat center center fixed; */
+  background-color: white;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
+
+footer {
+	width: 100%;
+	position: absolute;
+	margin-left: auto;
+	margin-right: auto;
+	bottom: 0px;
+}
+
+#boardDiv{
+	text-align: center;
+	width: 90%;
+	background-color: grey;
+	height: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.bRight{
+	border-right: 2px solid black;
+}
+
+.bLeft{
+	border-left: 2px solid black;
+}
+
+.bTop{
+	border-top: 2px solid black;
+}
+
+.bBottom{
+	border-bottom: 2px solid black;
+}
+
+.boxBtn{
+	height: 100px;
+	width: 100px;
+}
+
+#box1{
+
+}
+
+#box2{
+
+}
+
+#box3{
+
+}
+
+#box4{
+
+}
+
+#box5{
+
+}
+
+#box6{
+
+}
+
+#box7{
+
+}
+
+#box8{
+
+}
+
+#box9{
+
+}
+
+
+
