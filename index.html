@@ -19,6 +19,15 @@
 		<script>
 
 			var turn;
+			var box1;
+			var box2;
+			var box3;
+			var box4;
+			var box5;
+			var box6;
+			var box7;
+			var box8;
+			var box9;
 
 			//Based on btn clicked, set initial value of turn var
 			function pickFirstTurn(str){
@@ -27,7 +36,6 @@
 				} else if (str == 'O'){
 					turn = 'O';
 				}
-				console.log(turn);
 			}
 
 
@@ -41,20 +49,66 @@
 			//set a box to be an X or O depending on turn
 			//then switches the turn to the other player
 			function move(box, turn){
-				$(box).text(turn);
+				$('#box'+box).text(turn);
+				
+				//set the box vars to the value that is 'written' in them
+				switch (box){
+					case '1':
+						box1 = turn;
+						break;
+					case '2':
+						box2 = turn;
+						break;
+					case '3':
+						box3 = turn;
+						break;
+					case '4':
+						box4 = turn;
+						break;
+					case '5':
+						box5 = turn;
+						break;
+					case '6':
+						box6 = turn;
+						break;
+					case '7':
+						box7 = turn;
+						break;
+					case '8':
+						box8 = turn;
+						break;
+					case '9':
+						box9 = turn;
+						break;								
+				}
+
+
+				
 				switchTurn();
+
+				// console.log('box1 '+box1);
+				// console.log('box2 '+box2);
+				// console.log('box3 '+box3);
+				// console.log('box4 '+box4);
+				// console.log('box5 '+box5);
+				// console.log('box6 '+box6);
+				// console.log('box7 '+box7);
+				// console.log('box8 '+box8);
+				// console.log('box9 '+box9);
+
+
 			}
 
 			$(document).ready(function() {
-				$('#box1').on('click', function() {move('#box1', turn);});
-				$('#box2').on('click', function() {move('#box2', turn);});
-				$('#box3').on('click', function() {move('#box3', turn);});
-				$('#box4').on('click', function() {move('#box4', turn);});
-				$('#box5').on('click', function() {move('#box5', turn);});
-				$('#box6').on('click', function() {move('#box6', turn);});
-				$('#box7').on('click', function() {move('#box7', turn);});
-				$('#box8').on('click', function() {move('#box8', turn);});
-				$('#box9').on('click', function() {move('#box9', turn);});
+				$('#box1').on('click', function() {move('1', turn);});
+				$('#box2').on('click', function() {move('2', turn);});
+				$('#box3').on('click', function() {move('3', turn);});
+				$('#box4').on('click', function() {move('4', turn);});
+				$('#box5').on('click', function() {move('5', turn);});
+				$('#box6').on('click', function() {move('6', turn);});
+				$('#box7').on('click', function() {move('7', turn);});
+				$('#box8').on('click', function() {move('8', turn);});
+				$('#box9').on('click', function() {move('9', turn);});
 
 				// First Turn Buttons
 				// Will be added to initial pop-up box
