@@ -19,15 +19,7 @@
 		<script>
 
 			var turn;
-			var box1;
-			var box2;
-			var box3;
-			var box4;
-			var box5;
-			var box6;
-			var box7;
-			var box8;
-			var box9;
+			var boxVals = ['', '', '', '', '', '', '', '', '']
 
 			//Based on btn clicked, set initial value of turn var
 			function pickFirstTurn(str){
@@ -49,52 +41,15 @@
 			//set a box to be an X or O depending on turn
 			//then switches the turn to the other player
 			function move(box, turn){
+
 				$('#box'+box).text(turn);
 				
 				//set the box vars to the value that is 'written' in them
-				switch (box){
-					case '1':
-						box1 = turn;
-						break;
-					case '2':
-						box2 = turn;
-						break;
-					case '3':
-						box3 = turn;
-						break;
-					case '4':
-						box4 = turn;
-						break;
-					case '5':
-						box5 = turn;
-						break;
-					case '6':
-						box6 = turn;
-						break;
-					case '7':
-						box7 = turn;
-						break;
-					case '8':
-						box8 = turn;
-						break;
-					case '9':
-						box9 = turn;
-						break;								
-				}
-
-
+				boxVals[parseInt(box)-1] = turn;
 				
 				switchTurn();
 
-				// console.log('box1 '+box1);
-				// console.log('box2 '+box2);
-				// console.log('box3 '+box3);
-				// console.log('box4 '+box4);
-				// console.log('box5 '+box5);
-				// console.log('box6 '+box6);
-				// console.log('box7 '+box7);
-				// console.log('box8 '+box8);
-				// console.log('box9 '+box9);
+				// console.log(boxVals)
 
 
 			}
