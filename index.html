@@ -30,6 +30,39 @@
 				}
 			}
 
+			function checkWin(){
+				//8 winners are 123, 456, 789, 147, 258, 369, 159, 357
+				//must subtract 1 since we are using indexes (makes code cleaner)
+				//winners now   012, 345, 678, 036, 147, 258, 048, 246
+
+				if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
+					alert('winner' + turn);
+				}
+
+				else if (boxVals[3]==boxVals[4] && boxVals[4]==boxVals[5] && boxVals[3]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[6]==boxVals[7] && boxVals[7]==boxVals[8] && boxVals[6]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[0]==boxVals[3] && boxVals[3]==boxVals[6] && boxVals[0]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[1]==boxVals[4] && boxVals[4]==boxVals[7] && boxVals[1]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[2]==boxVals[5] && boxVals[5]==boxVals[8] && boxVals[2]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[0]==boxVals[4] && boxVals[4]==boxVals[8] && boxVals[0]!= ''){
+					alert('winner' + turn);
+				}
+				else if (boxVals[2]==boxVals[4] && boxVals[4]==boxVals[6] && boxVals[2]!= ''){
+					alert('winner ' + turn);
+				}
+
+			}			
+
 
 			//After a move, switch turn from X to O or vice versa
 			function switchTurn(){
@@ -42,17 +75,22 @@
 			//then switches the turn to the other player
 			function move(box, turn){
 
-				$('#box'+box).text(turn);
-				
-				//set the box vars to the value that is 'written' in them
-				boxVals[parseInt(box)-1] = turn;
-				
-				switchTurn();
+				//make sure that it's not an already used box
+				if (boxVals[parseInt(box)-1]==''){
+					$('#box'+box).text(turn);
+					
+					//set the box vars to the value that is 'written' in them
+					boxVals[parseInt(box)-1] = turn;
+					
+					checkWin();
+					switchTurn();
+				}
 
-				// console.log(boxVals)
 
 
 			}
+
+
 
 			$(document).ready(function() {
 				$('#box1').on('click', function() {move('1', turn);});
