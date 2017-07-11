@@ -18,9 +18,25 @@
 
 		<script>
 
+			function addX(str){
+				$(str).text('X');
+			}
+
+			function addO(str){
+				$(str).text('O');
+			}
+
 
 			$(document).ready(function() {
-
+				$('#box1').on('click', function() {addX('#box1');});
+				$('#box2').on('click', function() {addX('#box2');});
+				$('#box3').on('click', function() {addX('#box3');});
+				$('#box4').on('click', function() {addX('#box4');});
+				$('#box5').on('click', function() {addX('#box5');});
+				$('#box6').on('click', function() {addX('#box6');});
+				$('#box7').on('click', function() {addX('#box7');});
+				$('#box8').on('click', function() {addX('#box8');});
+				$('#box9').on('click', function() {addX('#box9');});
 
 			});
 
@@ -30,17 +46,17 @@
 			<h1>Tic Tac Toe</h1>
 
 			<div id="boardDiv">
-					<button id="box1" class="boxBtn bRight bBottom col col-md-4">x</button>
-					<button id="box2" class="boxBtn bLeft bBottom bRight col col-md-4">x</button>
-					<button id="box3" class="boxBtn bLeft bBottom col col-md-4">x</button>
+					<button id="box1" class="boxBtn bRight bBottom col col-md-4"></button>
+					<button id="box2" class="boxBtn bLeft bBottom bRight col col-md-4"></button>
+					<button id="box3" class="boxBtn bLeft bBottom col col-md-4"></button>
 					<br>
-					<button id="box4" class="boxBtn bTop bRight bBottom col col-md-4">x</button>
-					<button id="box5" class="boxBtn bTop bRight bLeft bBottom col col-md-4">x</button>
-					<button id="box6" class="boxBtn bTop bBottom bLeft col col-md-4">x</button>
+					<button id="box4" class="boxBtn bTop bRight bBottom col col-md-4"></button>
+					<button id="box5" class="boxBtn bTop bRight bLeft bBottom col col-md-4"></button>
+					<button id="box6" class="boxBtn bTop bBottom bLeft col col-md-4"></button>
 					<br>
-					<button id="box7" class="boxBtn bTop bRight col col-md-4">x</button>
-					<button id="box8" class="boxBtn bTop bRight bLeft col col-md-4">x</button>
-					<button id="box9" class="boxBtn bTop bLeft col col-md-4">x</button>
+					<button id="box7" class="boxBtn bTop bRight col col-md-4"></button>
+					<button id="box8" class="boxBtn bTop bRight bLeft col col-md-4"></button>
+					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>
 				
 			</div>
 		</div>
