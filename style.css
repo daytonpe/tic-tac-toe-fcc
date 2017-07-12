@@ -1,14 +1,14 @@
 *{
-	font-family: 'Roboto Condensed', sans-serif;
-	color: black;
+	font-family: 'Architects Daughter', sans-serif;
+	color: white;
 }
 
-h1{
+p{
 	font-size: 3em;
 }
 
 h2{
-	font-size: 2em;
+	font-size: 1.7em;
 }
 
 html, body { 
@@ -35,37 +35,53 @@ button{
 	border: none;
 }
 
+#boardDiv button{
+	font-size: 8em;
+}
+
+#numPlayersDiv button, #pickTeamDiv button{
+	font-size: 3em;
+}
+
+#whiteBoard{
+	margin-top: 2em;
+	padding: 25px;
+	width: 900px;
+	height: 750px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #3B653D;
+	border: 5px solid #4A1804;
+	border-radius: 10px;
+}
+
 #boardDiv, #numPlayersDiv, #pickTeamDiv{
 	text-align: center;
 	width: 500px;
-	/*background-color: grey;*/
+	/*background-color: transparent;*/
 	height: 500px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-#numPlayersDiv{
-	/*background-color: pink;*/
-}
-
-#pickTeamDiv{
-	/*background-color: grey;*/
+#numPlayersDiv, #pickTeamDiv{
+	margin-top: 12em;
 }
 
 .bRight{
-	border-right: 2px solid black;
+	border-right: 2px solid white;
 }
 
 .bLeft{
-	border-left: 2px solid black;
+	border-left: 2px solid white;
 }
 
 .bTop{
-	border-top: 2px solid black;
+	border-top: 2px solid white;
 }
 
 .bBottom{
-	border-bottom: 2px solid black;
+	border-bottom: 2px solid white;
 }
 
 .boxBtn{
@@ -87,4 +103,20 @@ button{
 
 button:focus{
 	outline: none;
+}
+
+#turnIndicator, #scoreboard, #title {
+  font-size: 1.7em;
+}
+
+#turnIndicator{
+	text-align: left;
+}
+
+#title{
+	text-align: center;
+}
+
+#scoreboard, #scores{
+	text-align: right;
 }

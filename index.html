@@ -6,8 +6,7 @@
 		<title>TicTacToe (PD)</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-		<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -34,9 +33,14 @@
 			var playerTeam;
 			var computerTeam;
 
+			//Scoreboard Vars
+			var XScore = 0;
+			var OScore = 0;
 
 			// for single player game, is it my turn? Keeps from clicking out of turn
 			var isTurn = true;
+
+			var gameOver = false;
 
 			//Based on btn clicked, set initial value of turn var
 			function pickFirstTurn(str){
@@ -55,58 +59,68 @@
 				turn = undefined;
 			}
 
+			function incrementScore(team){
+				console.log(team);
+				gameOver=true;
+
+				if (team == 'X'){
+					XScore++;
+				} else OScore++;
+
+				// refresh
+				$('#XScore').text(XScore);
+				$('#OScore').text(OScore);
+			}
+
+
 			function checkWin(){
 				//8 winners are 123, 456, 789, 147, 258, 369, 159, 357
 				//must subtract 1 since we are using indexes (makes code cleaner)
 				//winners now   012, 345, 678, 036, 147, 258, 048, 246
+				if(boxVals.indexOf('')==-1){
+					$('#turnIndicator').text('You tied!');
+					gameOver=true;
 
-				if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
+				}
+				else if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[3]==boxVals[4] && boxVals[4]==boxVals[5] && boxVals[3]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[6]==boxVals[7] && boxVals[7]==boxVals[8] && boxVals[6]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[0]==boxVals[3] && boxVals[3]==boxVals[6] && boxVals[0]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[1]==boxVals[4] && boxVals[4]==boxVals[7] && boxVals[1]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[2]==boxVals[5] && boxVals[5]==boxVals[8] && boxVals[2]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[0]==boxVals[4] && boxVals[4]==boxVals[8] && boxVals[0]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 				else if (boxVals[2]==boxVals[4] && boxVals[4]==boxVals[6] && boxVals[2]!= ''){
 					console.log('WINNER! '+turn);
-					$('#winnerBox').text(turn+' WINS!');
-					$('#winnerBox').removeClass('hidden');
-					clearBoard();
+					$('#turnIndicator').text(turn+' wins!');
+					incrementScore(turn);
 				}
 			}			
 
@@ -129,7 +143,6 @@
 					boxVals[parseInt(box)-1] = team;
 					
 					checkWin();
-					switchTurn();
 
 					// can't click while isTurn is false
 					if (numPlayers==1){
@@ -139,67 +152,64 @@
 				}
 			}
 
-
+			//Putting Algorithm Together
 			function computerMove(){
-				setTimeout(function() {
-					// *** ALGORITHM GOES HERE ***
+				if (!gameOver){
+					setTimeout(function() {
 					
-					// 1 WIN
-					if (win() != -1){
-						markBoard((win()+1).toString(), computerTeam);
-						checkWin();
-					}
+						// 1 WIN
+						if (win() != -1){
+							console.log('win move: '+ (win()+1));
+							markBoard((win()+1).toString(), computerTeam);
+						}
 
-					// 2 BLOCK
-					if (block() != -1){
-						markBoard((block()+1).toString(), computerTeam);
-						checkWin();
-					}
+						// 2 BLOCK
+						else if (block() != -1){
+							console.log('block move: '+ (block()+1));
+							markBoard((block()+1).toString(), computerTeam);
+						}
 
-					// 3 FORK
+						// 3 FORK
+						else if (fork(playerTeam) != -1){
+							console.log('fork move: '+ (fork(playerTeam)+1));
+							markBoard((fork(playerTeam)+1).toString(), computerTeam);
+						}
 
-					// 4 BLOCK OPPONENT FORK
+						// 4 BLOCK OPPONENT FORK
+						else if (fork(computerTeam) != -1){
+							console.log('block fork move: '+ (fork(computerTeam)));
+							markBoard((fork(computerTeam)+1).toString(), computerTeam);
+						}
 
-					// 5 CENTER
-					else if (boxVals[4] == ''){
-						console.log('center move: '+ 6);
-						markBoard('5', computerTeam);
-						checkWin();
-						switchTurn()
-					} 
+						// 5 CENTER
+						else if (boxVals[4] == ''){
+							console.log('center move');
+							markBoard('5', computerTeam);
+						} 
 
-					// 6 OPPOSITE CORNER
-					else if (oppositeCorner()!=-1){
-						console.log('opposite corner move: '+ oppositeCorner());
-						markBoard((oppositeCorner()+1).toString(), computerTeam);
-						checkWin();
-						switchTurn()		
-					}
+						// 6 OPPOSITE CORNER
+						else if (oppositeCorner()!=-1){
+							console.log('opposite corner move: '+ (oppositeCorner()+1));
+							markBoard((oppositeCorner()+1).toString(), computerTeam);
+						}
 
+						// 7 EMPTY CORNER
+						else if (openCorner()!=-1){
+							console.log('open corner move: '+ (openCorner()+1));
+							markBoard((openCorner()+1).toString(), computerTeam);
+						}
 
-					// 7 EMPTY CORNER
-					else if (openCorner()!=-1){
-						console.log('open corner move: '+ openCorner());
-						markBoard((openCorner()+1).toString(), computerTeam);
-						checkWin();
-						switchTurn()		
-					}
+						// 8 EMPTY SIDE
+						else{
+							console.log('side move: '+ (side()+1));
+							markBoard((side()+1).toString(), computerTeam);
+						}
 
-					// 8 EMPTY SIDE
-					else{
-						console.log('side move: '+ side());
-						markBoard((side()+1).toString(), computerTeam);
-						checkWin();
-						switchTurn()		
-					}
-
-					// *************
-
-					// now you can click again
-					isTurn = true;
-				}, 1000);
+						// now you can click again
+						isTurn = true;
+					}, 1000);
+				}
 			}
-
 
 			// Algorithm Functions
 			function win(){
@@ -282,6 +292,69 @@
 				return -1;
 			}
 
+			//playerTeam for making fork, computerTeam for blocking fork
+			function fork(team){
+
+				//look at each of the nine boxes
+				for (var i in boxVals){
+					
+					//if the box has something in it, move on to next one
+					if (boxVals[i] != ''){
+						continue;
+					}
+					// console.log('CHECKING: ' +i)
+					var winCount=0; //if I mark this box, how many winning paths can i set up? (either 0, 1, 2, or 3)
+
+					//Plan from here on:
+					//loop through all win possibilities that contain the current box.
+					//if it contains this box + 1 blank + 1 computerTeam, increment winCount
+					//if winCount for this box >2 (i.e. a fork) return that box for move
+
+					//Loop through win possibilities
+					for (var j = 0; j<wins.length; j++){
+
+						//if the win possibility contains the box we are checking, we see if it's a possible fork path
+						if (wins[j].includes(parseInt(i))){
+
+
+							//build a symbol array for the win path i.e. ['X', '', 'O']
+							var winPathChars = [];
+							for (var k in wins[j]){
+								winPathChars.push(boxVals[wins[j][k]]);
+							}
+
+							//ensure winpath isn't empty
+							function isEmpty(str) { return str == '';}
+							if (winPathChars.every(isEmpty)){
+								continue;
+							}
+
+
+							//MAKE FORK: make sure no parts of path have player team in it.
+							//BLOCK FORK: make sure no parts of path have computer team in it.
+							if (winPathChars.includes(team)){
+								continue;
+							}
+							
+							//make sure there are two blank spaces in winpath
+							if (winPathChars.indexOf('') == winPathChars.lastIndexOf('')){ //if only one ''
+								continue;
+							}
+
+							//if it passes all the tests, then it is a valid fork option and we increment
+							winCount++;
+
+							//if wincount get's to 2, we play there
+							if (winCount==2){
+								return parseInt(i);
+							}
+							// console.log(wins[j]+' '+winPathChars+' win count now at: '+winCount);
+						}
+					}
+				}
+				return -1;
+			}
+
 			function oppositeCorner(){
 				if(boxVals[0]==playerTeam && boxVals[2] == ''){
 					return 8;
@@ -323,13 +396,12 @@
 				}	
 			}				
 			
-
 			function menuTwo(){
 				$('#numPlayersDiv').addClass('hidden');
 				$('#pickTeamDiv').removeClass('hidden');
 			}
 
-			function startGame(){
+			function goToBoard(){
 				$('#pickTeamDiv').addClass('hidden');
 				$('#numPlayersDiv').addClass('hidden');
 				$('#boardDiv').removeClass('hidden');
@@ -351,12 +423,10 @@
 
 
 
-
-
 			$(document).ready(function() {
 				
 				// PLAYER TURNS
-				
+				if (!gameOver){
 					$('#box1').on('click', function() {boxBtnAction('1')});
 					$('#box2').on('click', function() {boxBtnAction('2')});
 					$('#box3').on('click', function() {boxBtnAction('3')});
@@ -366,24 +436,34 @@
 					$('#box7').on('click', function() {boxBtnAction('7')});
 					$('#box8').on('click', function() {boxBtnAction('8')});
 					$('#box9').on('click', function() {boxBtnAction('9')});
+				}
 
-					
+				$('#XScore').text(XScore);
+				$('#OScore').text(OScore);
+
+				if (gameOver){
+					$('#whiteBoard').on('click', function() {
+						clearBoard();
+						gameOver=false;
+					});
+				}
 				
-
 				// First Turn Buttons
 				$('#btnXStarts').on('click', function() {
 					turn = 'X';
 					playerTeam = 'X';
 					computerTeam = 'O';
 					pickFirstTurn('X');
-					startGame();
+					goToBoard();
+					$('#infoRow').removeClass('hidden');
 				});
 				$('#btnOStarts').on('click', function() {
 					turn = 'O';
 					playerTeam = 'O';
 					computerTeam = 'X';
 					pickFirstTurn('O');
-					startGame();
+					goToBoard();
+					$('#infoRow').removeClass('hidden');
 				});
 				$('#btnClear').on('click', function() {clearBoard();});
 
@@ -394,7 +474,7 @@
 				});
 				$('#btnTwoPlayers').on('click', function() {
 					numPlayers = 2;
-					startGame();
+					goToBoard();
 				});
 
 
@@ -403,11 +483,25 @@
 		</script>
 
 		<div id="main" class="container">	
-			<h1>Tic Tac Toe</h1>
 
-			<h1 id="winnerBox" class="hidden"></h1>
+			<div id="whiteBoard">
+			
+				<div class="row hidden" id="infoRow">
+					<div class="col col-md-4">
+						<h2 id="turnIndicator">O's Turn</h2>
+					</div>
+					<div class="col col-md-4">
+						<h2 id="title">Impossible Tic Tac Toe</h2>
+					</div>
+					<div class="col col-md-4">
+						<h2 id="scoreboard" class="">Scoreboard</h2>
+						<h2 id="scores">X: <span id="XScore">0</span><br>O: <span id="OScore">0</span></h2>			
+					</div>
+				</div>		
+				
+				<div id="dimmerBoard"></div>
+				<div id="boardDiv" class="hidden">
 
-			<div id="boardDiv" class="hidden">
 					<button id="box1" class="boxBtn bRight bBottom col col-md-4"></button>
 					<button id="box2" class="boxBtn bLeft bBottom bRight col col-md-4"></button>
 					<button id="box3" class="boxBtn bLeft bBottom col col-md-4"></button>
@@ -419,17 +513,20 @@
 					<button id="box7" class="boxBtn bTop bRight col col-md-4"></button>
 					<button id="box8" class="boxBtn bTop bRight bLeft col col-md-4"></button>
 					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>		
-			</div>
+				</div>
 
-			<div id="numPlayersDiv" class="">
-				<p>How many players?</p>
-				<button id="btnOnePlayer">One</button>
-				<button id="btnTwoPlayers">Two</button>
-			</div>
-			<div id="pickTeamDiv" class="hidden">
-				<p>Choose your weapon</p>
-				<button id="btnXStarts">X</button>
-				<button id="btnOStarts">O</button>
+				<div id="numPlayersDiv" class="">
+					<p>How many players?</p>
+					<button id="btnOnePlayer">One</button>
+					<button id="btnTwoPlayers">Two</button>
+				</div>
+
+				<div id="pickTeamDiv" class="hidden">
+					<p>Choose your weapon</p>
+					<button id="btnXStarts">X</button>
+					<button id="btnOStarts">O</button>
+				</div>
+
 			</div>
 
 			<!-- <button id="btnClear">CLEAR</button>  -->
