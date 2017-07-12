@@ -124,11 +124,14 @@
 				}
 			}			
 
-			//After a move, switch turn from X to O or vice versa
+			// After a move, switch turn from X to O or vice versa
 			function switchTurn(){
+				console.log('turn: ' +turn);
 				if (turn == 'X'){
 					turn = 'O';
 				} else turn = 'X';
+
+				$('#turnSpan').text(turn);
 			}
 
 			//set a box to be an X or O depending on turn
@@ -143,6 +146,7 @@
 					boxVals[parseInt(box)-1] = team;
 					
 					checkWin();
+					switchTurn();
 
 					// can't click while isTurn is false
 					if (numPlayers==1){
@@ -457,6 +461,7 @@
 					goToBoard();
 					$('#infoRow').removeClass('hidden');
 				});
+
 				$('#btnOStarts').on('click', function() {
 					turn = 'O';
 					playerTeam = 'O';
@@ -465,6 +470,7 @@
 					goToBoard();
 					$('#infoRow').removeClass('hidden');
 				});
+
 				$('#btnClear').on('click', function() {clearBoard();});
 
 				// Menu Controls
@@ -488,7 +494,7 @@
 			
 				<div class="row hidden" id="infoRow">
 					<div class="col col-md-4">
-						<h2 id="turnIndicator">O's Turn</h2>
+						<h2 id="turnIndicator"><span id="turnSpan"></span>'s Turn</h2>
 					</div>
 					<div class="col col-md-4">
 						<h2 id="title">Impossible Tic Tac Toe</h2>
