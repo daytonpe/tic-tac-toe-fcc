@@ -151,6 +151,10 @@
 					}
 
 					// 2 BLOCK
+					if (block() != -1){
+						markBoard((block()+1).toString(), computerTeam);
+						checkWin();
+					}
 
 					// 3 FORK
 
@@ -164,10 +168,19 @@
 						switchTurn()
 					} 
 
+					// 6 OPPOSITE CORNER
+					else if (oppositeCorner()!=-1){
+						console.log('opposite corner move: '+ oppositeCorner());
+						markBoard((oppositeCorner()+1).toString(), computerTeam);
+						checkWin();
+						switchTurn()		
+					}
+
+
 					// 7 EMPTY CORNER
-					else if (corner()!=-1){
-						console.log('corner move: '+ corner());
-						markBoard((corner()+1).toString(), computerTeam);
+					else if (openCorner()!=-1){
+						console.log('open corner move: '+ openCorner());
+						markBoard((openCorner()+1).toString(), computerTeam);
 						checkWin();
 						switchTurn()		
 					}
@@ -180,29 +193,15 @@
 						switchTurn()		
 					}
 
-					// 9 BROKEN ALGORITHM (EMPTY SPACE) SHOULD NO LONGER BE NECESSARY
-					// else{
-					// 	for (var i=0; i<10; i++){
-					// 		if (boxVals[i] == ''){
-					// 			markBoard((i+1).toString(), computerTeam);
-					// 			var q = i+1;
-					// 			console.log('broken algo is called on: '+q );
-					// 			console.log((i+1).toString());
-					// 			checkWin();
-					// 			switchTurn()
-					// 			break;
-					// 		}
-					// 	}	
-					// }
 					// *************
-
-
 
 					// now you can click again
 					isTurn = true;
 				}, 1000);
 			}
 
+
+			// Algorithm Functions
 			function win(){
 
 				for (var a = 0; a<wins.length; a++){
@@ -243,8 +242,60 @@
 				return -1;
 			}
 
+			function block(){
 
-			function corner(){
+				for (var a = 0; a<wins.length; a++){
+				
+					var canWin = true;
+
+					// row needs two of computer team characters and the third to be open
+					var inRow = 0;
+
+					// is the other teams char taken by one of the numbers in the win?
+					for (var b = 0; b<3; b++){
+
+						var activeBox = wins[a][b];
+
+						if (boxVals[activeBox] == playerTeam){
+							inRow++;
+						}
+
+						if (boxVals[activeBox] == computerTeam){
+							canWin = false;
+							// console.log('canWin now false')
+						}
+
+					}
+
+					// if there is a a place to win, return the board index of the move
+					if (canWin && inRow == 2){
+						for (var c = 0; c<3; c++){
+							if(boxVals[wins[a][c]]==''){
+								// console.log([wins[a][c]]);
+								return wins[a][c];
+							}
+						}
+					}
+
+				}
+
+				return -1;
+			}
+
+			function oppositeCorner(){
+				if(boxVals[0]==playerTeam && boxVals[2] == ''){
+					return 8;
+				} else if(boxVals[2]==playerTeam && boxVals[6] == ''){
+					return 6;
+				} else if(boxVals[6]==playerTeam && boxVals[2] == ''){
+					return 2;
+				} else if(boxVals[8]==playerTeam && boxVals[0] == ''){
+					return 0;
+				} 
+				return -1;
+			}
+
+			function openCorner(){
 				if (boxVals[0] == ''){
 					return 0;
 				} else if (boxVals[2] == ''){
