@@ -18,8 +18,25 @@
 
 		<script>
 
-			var turn;
-			var boxVals = ['', '', '', '', '', '', '', '', '']
+			//for two player games, X will go first (on the first game)
+			//for one player games, turn will be overwritten
+			var turn = 'X';
+
+			//to keep track of what is in each box
+			var boxVals = ['', '', '', '', '', '', '', '', ''];
+
+			var wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+
+			//either 1 or 2
+			var numPlayers;
+
+			//for 1 player games, X or O
+			var playerTeam;
+			var computerTeam;
+
+
+			// for single player game, is it my turn? Keeps from clicking out of turn
+			var isTurn = true;
 
 			//Based on btn clicked, set initial value of turn var
 			function pickFirstTurn(str){
@@ -30,39 +47,68 @@
 				}
 			}
 
+			function clearBoard(){
+				boxVals = ['', '', '', '', '', '', '', '', '']
+				for (var i = 1; i<10; i++){
+					$('#box'+i).text('');
+				}
+				turn = undefined;
+			}
+
 			function checkWin(){
 				//8 winners are 123, 456, 789, 147, 258, 369, 159, 357
 				//must subtract 1 since we are using indexes (makes code cleaner)
 				//winners now   012, 345, 678, 036, 147, 258, 048, 246
 
 				if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
-
 				else if (boxVals[3]==boxVals[4] && boxVals[4]==boxVals[5] && boxVals[3]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[6]==boxVals[7] && boxVals[7]==boxVals[8] && boxVals[6]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[0]==boxVals[3] && boxVals[3]==boxVals[6] && boxVals[0]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[1]==boxVals[4] && boxVals[4]==boxVals[7] && boxVals[1]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[2]==boxVals[5] && boxVals[5]==boxVals[8] && boxVals[2]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[0]==boxVals[4] && boxVals[4]==boxVals[8] && boxVals[0]!= ''){
-					alert('winner' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
 				else if (boxVals[2]==boxVals[4] && boxVals[4]==boxVals[6] && boxVals[2]!= ''){
-					alert('winner ' + turn);
+					console.log('WINNER! '+turn);
+					$('#winnerBox').text(turn+' WINS!');
+					$('#winnerBox').removeClass('hidden');
+					clearBoard();
 				}
-
 			}			
-
 
 			//After a move, switch turn from X to O or vice versa
 			function switchTurn(){
@@ -73,40 +119,232 @@
 
 			//set a box to be an X or O depending on turn
 			//then switches the turn to the other player
-			function move(box, turn){
+			function markBoard(box, team){
 
 				//make sure that it's not an already used box
 				if (boxVals[parseInt(box)-1]==''){
-					$('#box'+box).text(turn);
+					$('#box'+box).text(team);
 					
 					//set the box vars to the value that is 'written' in them
-					boxVals[parseInt(box)-1] = turn;
+					boxVals[parseInt(box)-1] = team;
 					
 					checkWin();
 					switchTurn();
+
+					// can't click while isTurn is false
+					if (numPlayers==1){
+						isTurn == false;
+					}
+
+				}
+			}
+
+
+			function computerMove(){
+				setTimeout(function() {
+					// *** ALGORITHM GOES HERE ***
+					
+					// 1 WIN
+					if (win() != -1){
+						markBoard((win()+1).toString(), computerTeam);
+						checkWin();
+					}
+
+					// 2 BLOCK
+
+					// 3 FORK
+
+					// 4 BLOCK OPPONENT FORK
+
+					// 5 CENTER
+					else if (boxVals[4] == ''){
+						console.log('center move: '+ 6);
+						markBoard('5', computerTeam);
+						checkWin();
+						switchTurn()
+					} 
+
+					// 7 EMPTY CORNER
+					else if (corner()!=-1){
+						console.log('corner move: '+ corner());
+						markBoard((corner()+1).toString(), computerTeam);
+						checkWin();
+						switchTurn()		
+					}
+
+					// 8 EMPTY SIDE
+					else{
+						console.log('side move: '+ side());
+						markBoard((side()+1).toString(), computerTeam);
+						checkWin();
+						switchTurn()		
+					}
+
+					// 9 BROKEN ALGORITHM (EMPTY SPACE) SHOULD NO LONGER BE NECESSARY
+					// else{
+					// 	for (var i=0; i<10; i++){
+					// 		if (boxVals[i] == ''){
+					// 			markBoard((i+1).toString(), computerTeam);
+					// 			var q = i+1;
+					// 			console.log('broken algo is called on: '+q );
+					// 			console.log((i+1).toString());
+					// 			checkWin();
+					// 			switchTurn()
+					// 			break;
+					// 		}
+					// 	}	
+					// }
+					// *************
+
+
+
+					// now you can click again
+					isTurn = true;
+				}, 1000);
+			}
+
+			function win(){
+
+				for (var a = 0; a<wins.length; a++){
+				
+					var canWin = true;
+
+					// row needs two of computer team characters and the third to be open
+					var inRow = 0;
+
+					// is the other teams char taken by one of the numbers in the win?
+					for (var b = 0; b<3; b++){
+
+						var activeBox = wins[a][b];
+
+						if (boxVals[activeBox] == computerTeam){
+							inRow++;
+						}
+
+						if (boxVals[activeBox] == playerTeam){
+							canWin = false;
+							// console.log('canWin now false')
+						}
+
+					}
+
+					// if there is a a place to win, return the board index of the move
+					if (canWin && inRow == 2){
+						for (var c = 0; c<3; c++){
+							if(boxVals[wins[a][c]]==''){
+								// console.log([wins[a][c]]);
+								return wins[a][c];
+							}
+						}
+					}
+
 				}
 
+				return -1;
+			}
 
 
+			function corner(){
+				if (boxVals[0] == ''){
+					return 0;
+				} else if (boxVals[2] == ''){
+					return 2;
+				} else if (boxVals[6] == ''){
+					return 6;
+				} else if (boxVals[8] == ''){
+					return 8;
+				} else {
+					return -1;	
+				}	
+			}
+
+			function side(){
+				if (boxVals[1] == ''){
+					return 1;
+				} else if (boxVals[3] == ''){
+					return 3;
+				} else if (boxVals[5] == ''){
+					return 5;
+				} else if (boxVals[7] == ''){
+					return 7;
+				} else {
+					return -1;	
+				}	
+			}				
+			
+
+			function menuTwo(){
+				$('#numPlayersDiv').addClass('hidden');
+				$('#pickTeamDiv').removeClass('hidden');
+			}
+
+			function startGame(){
+				$('#pickTeamDiv').addClass('hidden');
+				$('#numPlayersDiv').addClass('hidden');
+				$('#boardDiv').removeClass('hidden');
+			}
+
+			function boxBtnAction(str){
+				// if only one player, mark their move then have the computer move
+				// isTurn keeps player from clicking out of turn
+
+				if (numPlayers == 1 && isTurn){
+					markBoard(str, playerTeam);
+					computerMove();
+
+					// otherwise just mark the move of whoever's turn it is
+				} else{
+					markBoard(str, turn);
+				} 
 			}
 
 
 
+
+
 			$(document).ready(function() {
-				$('#box1').on('click', function() {move('1', turn);});
-				$('#box2').on('click', function() {move('2', turn);});
-				$('#box3').on('click', function() {move('3', turn);});
-				$('#box4').on('click', function() {move('4', turn);});
-				$('#box5').on('click', function() {move('5', turn);});
-				$('#box6').on('click', function() {move('6', turn);});
-				$('#box7').on('click', function() {move('7', turn);});
-				$('#box8').on('click', function() {move('8', turn);});
-				$('#box9').on('click', function() {move('9', turn);});
+				
+				// PLAYER TURNS
+				
+					$('#box1').on('click', function() {boxBtnAction('1')});
+					$('#box2').on('click', function() {boxBtnAction('2')});
+					$('#box3').on('click', function() {boxBtnAction('3')});
+					$('#box4').on('click', function() {boxBtnAction('4')});
+					$('#box5').on('click', function() {boxBtnAction('5')});
+					$('#box6').on('click', function() {boxBtnAction('6')});
+					$('#box7').on('click', function() {boxBtnAction('7')});
+					$('#box8').on('click', function() {boxBtnAction('8')});
+					$('#box9').on('click', function() {boxBtnAction('9')});
+
+					
+				
 
 				// First Turn Buttons
-				// Will be added to initial pop-up box
-				$('#btnXStarts').on('click', function() {pickFirstTurn('X');});
-				$('#btnOStarts').on('click', function() {pickFirstTurn('O');});
+				$('#btnXStarts').on('click', function() {
+					turn = 'X';
+					playerTeam = 'X';
+					computerTeam = 'O';
+					pickFirstTurn('X');
+					startGame();
+				});
+				$('#btnOStarts').on('click', function() {
+					turn = 'O';
+					playerTeam = 'O';
+					computerTeam = 'X';
+					pickFirstTurn('O');
+					startGame();
+				});
+				$('#btnClear').on('click', function() {clearBoard();});
+
+				// Menu Controls
+				$('#btnOnePlayer').on('click', function() {
+					numPlayers = 1;
+					menuTwo();
+				});
+				$('#btnTwoPlayers').on('click', function() {
+					numPlayers = 2;
+					startGame();
+				});
 
 
 			});
@@ -116,7 +354,9 @@
 		<div id="main" class="container">	
 			<h1>Tic Tac Toe</h1>
 
-			<div id="boardDiv">
+			<h1 id="winnerBox" class="hidden"></h1>
+
+			<div id="boardDiv" class="hidden">
 					<button id="box1" class="boxBtn bRight bBottom col col-md-4"></button>
 					<button id="box2" class="boxBtn bLeft bBottom bRight col col-md-4"></button>
 					<button id="box3" class="boxBtn bLeft bBottom col col-md-4"></button>
@@ -127,12 +367,21 @@
 					<br>
 					<button id="box7" class="boxBtn bTop bRight col col-md-4"></button>
 					<button id="box8" class="boxBtn bTop bRight bLeft col col-md-4"></button>
-					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>
-				
+					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>		
 			</div>
 
-			<button id="btnXStarts">X STARTS</button>
-			<button id="btnOStarts">O STARTS</button>
+			<div id="numPlayersDiv" class="">
+				<p>How many players?</p>
+				<button id="btnOnePlayer">One</button>
+				<button id="btnTwoPlayers">Two</button>
+			</div>
+			<div id="pickTeamDiv" class="hidden">
+				<p>Choose your weapon</p>
+				<button id="btnXStarts">X</button>
+				<button id="btnOStarts">O</button>
+			</div>
+
+			<!-- <button id="btnClear">CLEAR</button>  -->
 		</div>
 		
 	</body>

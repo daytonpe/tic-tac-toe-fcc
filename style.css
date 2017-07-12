@@ -35,13 +35,21 @@ button{
 	border: none;
 }
 
-#boardDiv{
+#boardDiv, #numPlayersDiv, #pickTeamDiv{
 	text-align: center;
 	width: 500px;
 	/*background-color: grey;*/
 	height: 500px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#numPlayersDiv{
+	/*background-color: pink;*/
+}
+
+#pickTeamDiv{
+	/*background-color: grey;*/
 }
 
 .bRight{
