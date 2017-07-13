@@ -89,18 +89,11 @@
 				$('#OScore').text(OScore);
 			}
 
-
 			function checkWin(){
 				//8 winners are 123, 456, 789, 147, 258, 369, 159, 357
 				//must subtract 1 since we are using indexes (makes code cleaner)
 				//winners now   012, 345, 678, 036, 147, 258, 048, 246
-				if(boxVals.indexOf('')==-1){
-					gameOver=true;
-					$('#turnIndicator').text('You tied!');
-					$('#reset').removeClass('hidden');
-					$('#resetBanner').text('You tied!')
-				}
-				else if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
+				if (boxVals[0]==boxVals[1] && boxVals[1]==boxVals[2] && boxVals[0]!= ''){
 					console.log('WINNER! '+turn);
 					$('#turnIndicator').text(turn+' wins!');
 					incrementScore(turn);
@@ -139,6 +132,11 @@
 					console.log('WINNER! '+turn);
 					$('#turnIndicator').text(turn+' wins!');
 					incrementScore(turn);
+				}else if(boxVals.indexOf('')==-1){
+					gameOver=true;
+					$('#turnIndicator').text('You tied!');
+					$('#reset').removeClass('hidden');
+					$('#resetBanner').text('You tied!')
 				}
 			}			
 
@@ -161,6 +159,7 @@
 			//set a box to be an X or O depending on turn
 			//then switches the turn to the other player
 			function markBoard(box, team){
+				console.log('Marking '+box+ ' for '+team);
 				// console.log('box contains: '+(boxVals[parseInt(box)-1]=='') )
 				//make sure that it's not an already used box
 				if (boxVals[parseInt(box)-1]==''){
@@ -198,15 +197,15 @@
 						}
 
 						// 3 FORK
-						else if (fork(playerTeam) != -1){
-							console.log('fork move: '+ (fork(playerTeam)+1));
-							markBoard((fork(playerTeam)+1).toString(), computerTeam);
+						else if (fork() != -1){
+							console.log('fork move: '+ (fork()+1));
+							markBoard((fork()+1).toString(), computerTeam);
 						}
 
 						// 4 BLOCK OPPONENT FORK
-						else if (fork(computerTeam) != -1){
-							console.log('block fork move: '+ (fork(computerTeam)));
-							markBoard((fork(computerTeam)+1).toString(), computerTeam);
+						else if (blockFork() != -1){
+							console.log('block fork move: '+ (blockFork()));
+							markBoard((parseInt(blockFork())+1).toString(), computerTeam);
 						}
 
 						// 5 CENTER
@@ -321,8 +320,7 @@
 			}
 
 			//playerTeam for making fork, computerTeam for blocking fork
-			function fork(team){
-
+			function fork(){
 				//look at each of the nine boxes
 				for (var i in boxVals){
 					
@@ -360,7 +358,7 @@
 
 							//MAKE FORK: make sure no parts of path have player team in it.
 							//BLOCK FORK: make sure no parts of path have computer team in it.
-							if (winPathChars.includes(team)){
+							if (winPathChars.includes(playerTeam)){
 								continue;
 							}
 							
@@ -380,6 +378,94 @@
 						}
 					}
 				}
+				return -1;
+			}
+
+			function blockFork(){
+
+				var singleWins = [];
+				//look at each of the nine boxes
+				for (var i in boxVals){
+					
+					//if the box has something in it, move on to next one
+					if (boxVals[i] != ''){
+						continue;
+					}
+					// console.log('CHECKING: ' +i)
+					var winCount=0; //if I mark this box, how many winning paths can i set up? (either 0, 1, 2, or 3)
+
+					//Plan from here on:
+					//loop through all win possibilities that contain the current box.
+					//if it contains this box + 1 blank + 1 computerTeam, increment winCount
+					//if winCount for this box >2 (i.e. a fork) return that box for move
+
+					//Loop through win possibilities
+					for (var j = 0; j<wins.length; j++){
+
+						//if the win possibility contains the box we are checking, we see if it's a possible fork path
+						if (wins[j].includes(parseInt(i))){
+
+
+							//build a symbol array for the win path i.e. ['X', '', 'O']
+							var winPathChars = [];
+							for (var k in wins[j]){
+								winPathChars.push(boxVals[wins[j][k]]);
+							}
+
+							//ensure winpath isn't empty
+							function isEmpty(str) { return str == '';}
+							if (winPathChars.every(isEmpty)){
+								continue;
+							}
+
+
+							//MAKE FORK: make sure no parts of path have player team in it.
+							//BLOCK FORK: make sure no parts of path have computer team in it.
+							if (winPathChars.includes(computerTeam)){
+								continue;
+							}
+							
+							//make sure there are two blank spaces in winpath
+							if (winPathChars.indexOf('') == winPathChars.lastIndexOf('')){ //if only one ''
+								continue;
+							}
+
+							//if it passes all the tests, then it is a valid fork option and we increment
+							winCount++;
+							// console.log(winCount);
+							//if wincount get's to 2, we play there
+							if (winCount==2){
+
+								//see below functions. If this move to block the fork
+								//forces our opponent to MAKE a fork with their next move
+								//we find another index
+								// console.log(i+' '+isFork(forcedMove(i, computerTeam),playerTeam))
+								if (!isFork(forcedMove(i, computerTeam),playerTeam)){
+									return i; 
+								}
+							}
+
+							if (winCount==1){
+								singleWins.push(i)
+							}
+
+							// console.log(wins[j]+' '+winPathChars+' win count now at: '+winCount);
+						}
+					}
+				}
+
+				// console.log(singleWins)
+				for (var j in singleWins){
+
+					//if none of the double winCount indexes work, 
+					//we find a single winCount that won't create a fork for other team
+					// console.log(forcedMove(singleWins[j], computerTeam)!=-1);
+					if (forcedMove(singleWins[j], computerTeam)!=-1 && !isFork(forcedMove(singleWins[j], computerTeam),playerTeam)){
+						return singleWins[j];
+					}
+				}
+
+				// console.log(winPathChars);
 				return -1;
 			}
 
@@ -423,13 +509,153 @@
 					return -1;	
 				}	
 			}				
-			
+
+			// These two functions are used in the forking program
+			// if you (team) play this index, is it a fork for you? true/false
+			function isFork(index, team){
+
+				var forkArr = [];
+				var singleWinForkArr = [];
+
+				//look at each of the nine boxes
+				for (var i in boxVals){
+					
+					//if the box has something in it, move on to next one
+					if (boxVals[i] != ''){
+						continue;
+					}
+					
+					var opponent;
+					if (team=='X'){
+						opponent='O';
+					} else opponent = 'X';
+
+					var winCount=0; //if I mark this box, how many winning paths can i set up? (either 0, 1, 2, or 3)
+
+					//Plan from here on:
+					//loop through all win possibilities that contain the current box.
+					//if it contains this box + 1 blank + 1 computerTeam, increment winCount
+					//if winCount for this box >2 (i.e. a fork) return that box for move
+
+					//Loop through win possibilities
+					for (var j = 0; j<wins.length; j++){
+
+						//if the win possibility contains the box we are checking, we see if it's a possible fork path
+						if (wins[j].includes(parseInt(i))){
+
+
+							//build a symbol array for the win path i.e. ['X', '', 'O']
+							var winPathChars = [];
+							for (var k in wins[j]){
+								winPathChars.push(boxVals[wins[j][k]]);
+							}
+
+							//ensure winpath isn't empty
+							function isEmpty(str) { return str == '';}
+							if (winPathChars.every(isEmpty)){
+								continue;
+							}
+
+							//BLOCK FORK: make sure no parts of path have computer team in it.
+							if (winPathChars.includes(opponent)){
+								continue;
+							}
+							
+							//make sure there are two blank spaces in winpath
+							if (winPathChars.indexOf('') == winPathChars.lastIndexOf('')){ //if only one ''
+								continue;
+							}
+
+							//if it passes all the tests, then it is a valid fork option and we increment
+							winCount++;
+
+							//if wincount get's to 2, we play there
+							if (winCount==2){
+								forkArr.push(i);
+							}
+							// console.log(wins[j]+' '+winPathChars+' win count now at: '+winCount);
+						}
+					}
+					// if (winCount==1){
+					// 	singleWinForkArr.push(i);
+					// }
+				}
+
+				// var arr = forkArr.concat(singleWinForkArr);
+				// console.log(singleWinForkArr);
+				// console.log(forkArr);
+
+				// for (var x in arr){
+				// 	if (arr[x])
+				// }
+
+				// console.log(index);
+				if (forkArr.includes(index.toString())){
+					return true;
+				}else return false;
+			}
+
+			// if team plays index, where will the other team be forced to play?
+			function forcedMove(index, team){
+				var opponent;
+				if (team=='X'){
+					opponent='O';
+				} else opponent = 'X';
+
+				//can't just set equal cuz it messes with global variable
+				var boxValsCopy = [];
+				for (var q in boxVals){
+					boxValsCopy.push(boxVals[q]);
+				}
+				boxValsCopy[index]=team;
+
+				// find all the paths that contain the index
+				var pathList = [];
+				for(var i in wins){
+					if (wins[i].includes(parseInt(index))){
+						pathList.push(wins[i]);
+					}
+				}
+
+
+				var arr = [];
+				for (var j in pathList){
+					// console.log(pathList[j]);
+
+					var oppoCounter = 0;
+					var teamCounter = 0;
+					var openSpot;
+					for (var k in pathList[j]){
+						if (boxValsCopy[pathList[j][k]]==opponent){
+							oppoCounter++;
+						}
+						if (boxValsCopy[pathList[j][k]]==team){
+							teamCounter++;
+						}
+						if(boxValsCopy[pathList[j][k]]==''){
+							openSpot=pathList[j][k];
+						}
+					}
+					if (oppoCounter==0 && teamCounter==2){
+						arr.push(openSpot);
+					}
+
+
+				}
+				if (arr.length>1){
+					return arr;
+				} else if (arr.length==1){
+					return arr[0];
+				} else return -1;
+			}
+
 			function menuTwo(){
 				$('#numPlayersDiv').addClass('hidden');
 				$('#pickTeamDiv').removeClass('hidden');
 			}
 
 			function goToBoard(){
+				$('#infoRow').removeClass('hidden');
 				$('#pickTeamDiv').addClass('hidden');
 				$('#numPlayersDiv').addClass('hidden');
 				$('#boardDiv').removeClass('hidden');
@@ -475,7 +701,7 @@
 					computerTeam = 'O';
 					pickFirstTurn('X');
 					goToBoard();
-					$('#infoRow').removeClass('hidden');
+					// $('#infoRow').removeClass('hidden');
 				});
 
 				$('#btnOStarts').on('click', function() {
@@ -485,7 +711,7 @@
 					computerTeam = 'X';
 					pickFirstTurn('O');
 					goToBoard();
-					$('#infoRow').removeClass('hidden');
+					// $('#infoRow').removeClass('hidden');
 				});
 
 				$('#reset').on('click', function() {
@@ -502,7 +728,6 @@
 					numPlayers = 2;
 					goToBoard();
 				});
-
 
 			});
 
@@ -540,9 +765,13 @@
 					<br>
 					<button id="box7" class="boxBtn bTop bRight col col-md-4"></button>
 					<button id="box8" class="boxBtn bTop bRight bLeft col col-md-4"></button>
-					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>		
-				</div>
+					<button id="box9" class="boxBtn bTop bLeft col col-md-4"></button>	
 
+				</div>
+				
+				<div id="credit">
+					<p id="">Coded by Pat Dayton</p>	
+				</div>
 
 				<div id="numPlayersDiv" class="">
 					<p>How many players?</p>
@@ -557,7 +786,6 @@
 				</div>
 
 			</div>
-
 
 		</div>
 		

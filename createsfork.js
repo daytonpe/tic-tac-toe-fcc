@@ -7,8 +7,8 @@ var wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 var playerTeam = 'X';
 var computerTeam = 'O';
 
-// does index create a fork for team
-function createsfork(index, team){
+// if you (team) play this index, is it a fork for you? true/false
+function isFork(index, team){
 
 	var forkArr = [];
 	var singleWinForkArr = [];
@@ -72,14 +72,23 @@ function createsfork(index, team){
 				// console.log(wins[j]+' '+winPathChars+' win count now at: '+winCount);
 			}
 		}
-		if (winCount==1){
-			singleWinForkArr.push(i);
-		}
+		// if (winCount==1){
+		// 	singleWinForkArr.push(i);
+		// }
 	}
 
-	if (forkArr.includes(index)){
+	// var arr = forkArr.concat(singleWinForkArr);
+	// console.log(singleWinForkArr);
+	// console.log(forkArr);
+
+	// for (var x in arr){
+	// 	if (arr[x])
+	// }
+
+	// console.log(index);
+	if (forkArr.includes(index.toString())){
 		return true;
-	} else return false;
+	}else return false;
 }
 
 // if team plays index, where will the other team be forced to play?
@@ -89,8 +98,13 @@ function forcedMove(index, team){
 		opponent='O';
 	} else opponent = 'X';
 
-	var boxValsCopy = boxVals;
+	//can't just set equal cuz it messes with global variable
+	var boxValsCopy = [];
+	for (var q in boxVals){
+		boxValsCopy.push(boxVals[q]);
+	}
 	boxValsCopy[index]=team;
+
 	// find all the paths that contain the index
 	var pathList = [];
 	for(var i in wins){
@@ -99,7 +113,7 @@ function forcedMove(index, team){
 		}
 	}
 
-	// how many of these are [team, team, '']? The '' is what we will return
+
 	var arr = [];
 	for (var j in pathList){
 		// console.log(pathList[j]);
@@ -131,4 +145,8 @@ function forcedMove(index, team){
 	} else return -1;
 }
 
-console.log(forcedMove('1',playerTeam));
+//if I (computer team) plays 2, will it create a fork for person?
+//if so, move to next one
+console.log(isFork(forcedMove(7, computerTeam),playerTeam));
+
+

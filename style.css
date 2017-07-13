@@ -141,3 +141,25 @@ button:focus{
 #resetBanner{
 	margin-top: 5em;
 }
+
+footer{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center
+}
+
+#credit{
+	width: 100%;
+	left: 0;
+	position: absolute;
+	z-index: 4;
+	bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	color: white;
+}
+
+#credit p{
+  font-size: 1em;
+  text-align: center;
+}
