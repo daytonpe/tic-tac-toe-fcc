@@ -56,18 +56,19 @@
 			function clearBoard(){
 				gameOver = false;
 				switchStartingTeam();
+				turn = startingTeam;
 				console.log(startingTeam+' is now the starting team')
 				boxVals = ['', '', '', '', '', '', '', '', '']
 				for (var i = 1; i<10; i++){
 					$('#box'+i).text('');
 				}
 				$('#reset').addClass('hidden');
-				$('#turnIndicator').html('<span id="turnSpan"></span>\'s Turn</h2>\'');
+				$('#turnIndicator').html('<span id="turnSpan"></span>\'s Turn</h2>');
+				$('#turnSpan').text(turn);
 
 				//if it's a 1 player game and the new starting team is the same as 
 				//the computer team, then make the computer start
 				if(numPlayers==1 && startingTeam==computerTeam){
-					console.log('called')
 					computerMove();
 				}
 			}
@@ -94,8 +95,8 @@
 				//must subtract 1 since we are using indexes (makes code cleaner)
 				//winners now   012, 345, 678, 036, 147, 258, 048, 246
 				if(boxVals.indexOf('')==-1){
-					$('#turnIndicator').text('You tied!');
 					gameOver=true;
+					$('#turnIndicator').text('You tied!');
 					$('#reset').removeClass('hidden');
 					$('#resetBanner').text('You tied!')
 				}
@@ -173,7 +174,7 @@
 
 					// can't click while isTurn is false
 					if (numPlayers==1 && turn != playerTeam){
-						isTurn == false;
+						isTurn = false;
 					}
 
 				}
@@ -433,29 +434,25 @@
 				$('#numPlayersDiv').addClass('hidden');
 				$('#boardDiv').removeClass('hidden');
 				$('#turnSpan').text(turn);
-				
 			}
 
 			function boxBtnAction(str){
 				// if only one player, mark their move then have the computer move
 				// isTurn keeps player from clicking out of turn
 
-				if (numPlayers == 1 && isTurn){
+				if (numPlayers == 1 && turn == playerTeam && boxVals[parseInt(str)-1]==''){
 					markBoard(str, playerTeam);
 					computerMove();
 
 					// otherwise just mark the move of whoever's turn it is
-				} else{
+				} else if (numPlayers == 2){
 					markBoard(str, turn);
 				} 
 			}
 
-
-
 			$(document).ready(function() {
 				
 				// PLAYER TURNS
-
 				$('#box1').on('click', function() {boxBtnAction('1')});
 				$('#box2').on('click', function() {boxBtnAction('2')});
 				$('#box3').on('click', function() {boxBtnAction('3')});
